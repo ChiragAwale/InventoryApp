@@ -29,9 +29,10 @@ public class InventoryProvider extends ContentProvider {
      * Setting up the Uri Matcher to configure behavior according to request (Single inventory or whole list)
      */
     private static final UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         mUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORIES, INVENTORIES);
-        mUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORIES+"/#", INVENTORY_ID);
+        mUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORIES + "/#", INVENTORY_ID);
     }
 
 
@@ -44,7 +45,23 @@ public class InventoryProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+       //Database for reading data from
+        SQLiteDatabase db = mInventoryDbHelper.getReadableDatabase();
+        //Cursor for storing result set from database
+        Cursor cursor = null;
+        switch (mUriMatcher.match(uri)) {
+            case INVENTORIES:
+                //Executes a select (Projection) from TABLE; command
+                cursor = db.query(InventoryEntry.TABLE_NAME, null, selection, selectionArgs, null, null, sortOrder);
+                Log.e("Cursor query method","cursor returned");
+                break;
+            case INVENTORY_ID:
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid query uri");
+        }
+        return cursor;
     }
 
 
@@ -56,23 +73,24 @@ public class InventoryProvider extends ContentProvider {
     //Returns error if invalid uri is sent when trying to insert
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        switch (mUriMatcher.match(uri)){
+        switch (mUriMatcher.match(uri)) {
             case INVENTORIES:
-                return insertProduct(uri,values);
+                return insertProduct(uri, values);
 
             default:
                 throw new IllegalArgumentException("Inserstion not supported for " + uri);
         }
     }
+
     //The method that actually carries out the insert method
-    private Uri insertProduct(Uri uri, ContentValues values){
+    private Uri insertProduct(Uri uri, ContentValues values) {
         SQLiteDatabase db = mInventoryDbHelper.getWritableDatabase();
-        long insID = db.insert(InventoryEntry.TABLE_NAME,null,values);
-        if(insID == -1){
-            Log.e(LOG_TAG,"Insert failed");
+        long insID = db.insert(InventoryEntry.TABLE_NAME, null, values);
+        if (insID == -1) {
+            Log.e(LOG_TAG, "Insert failed");
             return null;
         }
-        return ContentUris.withAppendedId(uri,insID);
+        return ContentUris.withAppendedId(uri, insID);
     }
 
     @Override
