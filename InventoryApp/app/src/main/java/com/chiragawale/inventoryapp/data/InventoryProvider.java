@@ -56,6 +56,9 @@ public class InventoryProvider extends ContentProvider {
                 Log.e("Cursor query method","cursor returned");
                 break;
             case INVENTORY_ID:
+                selection = InventoryEntry._ID + "=?";
+                selectionArgs =  new String [] {String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(InventoryEntry.TABLE_NAME,null,selection,selectionArgs,null,null,sortOrder);
                 break;
 
             default:

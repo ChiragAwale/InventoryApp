@@ -2,6 +2,7 @@ package com.chiragawale.inventoryapp;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,10 @@ public class ProductCursorAdapter extends CursorAdapter {
 
         //Sets data of text views according to data extracted from cursor
         nameTextView.setText(name);
-        supplierTextView.setText(supplier);
+        if(TextUtils.isEmpty(supplier)){
+            supplierTextView.setText("Unknown");
+        }else {
+            supplierTextView.setText(supplier);
+        }
     }
 }

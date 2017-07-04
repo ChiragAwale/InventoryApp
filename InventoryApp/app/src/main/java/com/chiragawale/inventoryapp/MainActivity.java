@@ -1,16 +1,21 @@
 package com.chiragawale.inventoryapp;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,6 +38,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Setup FAB to open EditorActivity
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //List view for populating data with adapter
         ListView listView = (ListView) findViewById(R.id.list);
 
@@ -47,6 +62,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Kick off the loader
         getLoaderManager().initLoader(PRODUCTLOADER_ID, null, this);
         Log.w("Main", "Initialized loader");
+
+        //Sets up individual click listeners to each item in the list view to forward to edit mode
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Uri currentProductUri = ContentUris.withAppendedId(InventoryEntry.CONTENT_URI,id);
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                intent.setData(currentProductUri);
+                startActivity(intent);
+            }
+        });
     }
 
     /*
@@ -78,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void insertProduct() {
+        //Setting up the insert statement
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_PRODUCT_NAME, "Sony Vaio");
         values.put(InventoryEntry.COLUMN_PRICE, 233);
@@ -97,13 +124,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return new CursorLoader(this, InventoryEntry.CONTENT_URI, projection, null
                 , null, null);
     }
-
+    //Loads up the data
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.w("Loader", "On Finished loader");
         mProductAdapter.swapCursor(data);
     }
-
+    //Releases the adapter
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mProductAdapter.swapCursor(null);
