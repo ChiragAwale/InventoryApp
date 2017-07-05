@@ -93,8 +93,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_all:
-                Toast.makeText(this, "All items deleted", Toast.LENGTH_SHORT).show();
-                return true;
+                //Calls the delete all statement to be executed by the Provider
+                int rowsAffected = getContentResolver().delete(InventoryEntry.CONTENT_URI,null,null);
+                if(rowsAffected > 0) {
+                    Toast.makeText(this, "All items deleted", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "Unsuccessful", Toast.LENGTH_SHORT).show();
+                }
+                    return true;
             case R.id.insert_dummy_data:
                 insertProduct();
                 //Toast.makeText(this, "Dummy data inserted", Toast.LENGTH_SHORT).show();

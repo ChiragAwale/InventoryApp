@@ -64,7 +64,6 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Invalid query uri");
         }
-
         return cursor;
     }
 
@@ -88,7 +87,9 @@ public class InventoryProvider extends ContentProvider {
 
     //The method that actually carries out the insert method
     private Uri insertProduct(Uri uri, ContentValues values) {
+        //Gets the database in a writable format
         SQLiteDatabase db = mInventoryDbHelper.getWritableDatabase();
+        //Executeing the insert command
         long insID = db.insert(InventoryEntry.TABLE_NAME, null, values);
         if (insID == -1) {
             Log.e(LOG_TAG, "Insert failed");
@@ -99,7 +100,11 @@ public class InventoryProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        //Getting the database in editable format
+        SQLiteDatabase db = mInventoryDbHelper.getWritableDatabase();
+        //Executes the delete statement and returns the delete id
+        int delId = db.delete(InventoryEntry.TABLE_NAME,selection,selectionArgs);
+        return delId;
     }
 
 
