@@ -64,6 +64,7 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Invalid query uri");
         }
+        cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;
     }
 
@@ -95,6 +96,8 @@ public class InventoryProvider extends ContentProvider {
             Log.e(LOG_TAG, "Insert failed");
             return null;
         }
+        //Setting up change notification configuration to notify of changes
+        getContext().getContentResolver().notifyChange(uri,null);
         return ContentUris.withAppendedId(uri, insID);
     }
 
@@ -104,6 +107,8 @@ public class InventoryProvider extends ContentProvider {
         SQLiteDatabase db = mInventoryDbHelper.getWritableDatabase();
         //Executes the delete statement and returns the delete id
         int delId = db.delete(InventoryEntry.TABLE_NAME,selection,selectionArgs);
+        //Setting up change notification configuration to notify of changes
+        getContext().getContentResolver().notifyChange(uri,null);
         return delId;
     }
 
@@ -115,6 +120,8 @@ public class InventoryProvider extends ContentProvider {
         selection = InventoryEntry._ID+"=?";
         selectionArgs = new String [] {String.valueOf(ContentUris.parseId(uri))};
         int updateId = db.update(InventoryEntry.TABLE_NAME,values,selection,selectionArgs);
+        //Setting up change notification configuration to notify of changes
+        getContext().getContentResolver().notifyChange(uri,null);
         return updateId;
     }
 }
