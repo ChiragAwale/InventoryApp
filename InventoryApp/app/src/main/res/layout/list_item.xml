@@ -6,22 +6,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="30dp"
         tools:text="Sony Vaio"
         android:id="@+id/product_name"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         />
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        tools:text="$500"
+        android:id="@+id/product_price"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
         android:paddingLeft="5dp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="30dp"
         tools:text="Sony"
         android:id="@+id/product_supplier"
         />
+        <TextView
+            android:paddingLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            tools:text="Q - 24"
+            android:id="@+id/quantityAvailable"
+            />
+    </LinearLayout>
 
 
 </LinearLayout>

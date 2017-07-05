@@ -32,10 +32,15 @@ public class ProductCursorAdapter extends CursorAdapter {
         //Text views for changing their texts
         TextView nameTextView = (TextView) view.findViewById(R.id.product_name);
         TextView supplierTextView = (TextView) view.findViewById(R.id.product_supplier);
+        TextView priceTextView = (TextView) view.findViewById(R.id.product_price);
+        TextView quantityTextview = (TextView) view.findViewById(R.id.quantityAvailable);
+
 
         //Extracting data from cursor
         String name = cursor.getString(cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME));
         String supplier = cursor.getString(cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_SUPPLIER));
+        String price = "$"+ cursor.getDouble(cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_PRICE));
+        String quantity = "Q - "+cursor.getInt(cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_QUANTITY_AVAILABLE));
 
         //Sets data of text views according to data extracted from cursor
         nameTextView.setText(name);
@@ -44,5 +49,16 @@ public class ProductCursorAdapter extends CursorAdapter {
         }else {
             supplierTextView.setText(supplier);
         }
+        if(TextUtils.isEmpty(price)){
+            priceTextView.setText("N/A");
+        }else {
+            priceTextView.setText(price);
+        }
+        if(TextUtils.isEmpty(quantity)){
+            quantityTextview.setText("N/A");
+        }else {
+            quantityTextview.setText(quantity);
+        }
+
     }
 }
