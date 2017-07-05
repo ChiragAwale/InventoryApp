@@ -64,6 +64,7 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Invalid query uri");
         }
+
         return cursor;
     }
 
@@ -101,8 +102,14 @@ public class InventoryProvider extends ContentProvider {
         return 0;
     }
 
+
+    //Handles the update case and returns update Id
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = mInventoryDbHelper.getWritableDatabase();
+        selection = InventoryEntry._ID+"=?";
+        selectionArgs = new String [] {String.valueOf(ContentUris.parseId(uri))};
+        int updateId = db.update(InventoryEntry.TABLE_NAME,values,selection,selectionArgs);
+        return updateId;
     }
 }
